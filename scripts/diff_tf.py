@@ -86,6 +86,9 @@ class DiffTf:
         self.encoder_low_wrap = rospy.get_param('wheel_low_wrap', (self.encoder_max - self.encoder_min) * 0.3 + self.encoder_min )
         self.encoder_high_wrap = rospy.get_param('wheel_high_wrap', (self.encoder_max - self.encoder_min) * 0.7 + self.encoder_min )
  
+        rospy.loginfo( f"ticks per meter: {self.ticks_meter}" )
+        rospy.loginfo( f"base width: {self.base_width}" )
+
         self.t_delta = rospy.Duration(1.0/self.rate)
         self.t_next = rospy.Time.now() + self.t_delta
         
@@ -124,7 +127,7 @@ class DiffTf:
     def update(self):
     #############################################################################
         now = rospy.Time.now()
-        if now > self.t_next:
+        if now > self.t_next and now > self.then:
             elapsed = now - self.then
             self.then = now
             elapsed = elapsed.to_sec()
